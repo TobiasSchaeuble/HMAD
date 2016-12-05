@@ -19,6 +19,7 @@ export interface Slide {
 export class TutorialPage {
   slides: Slide[];
   showSkip = true;
+  username: string;
 
   constructor(public navCtrl: NavController, public menu: MenuController, public storage: Storage) {
     this.slides = [
