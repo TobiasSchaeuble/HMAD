@@ -19,7 +19,7 @@ export class ConferenceData {
     if (this.data) {
       return Observable.of(this.data);
     } else {
-      return this.http.get('assets/data/data.json')
+      return this.http.get('proxy/hmad/data.json')
         .map(this.processData);
     }
   }
