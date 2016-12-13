@@ -6,12 +6,12 @@
     </ion-navbar>
 </ion-header>
 <ion-content no-bounce>
-    <ion-item>
-        <ion-label floating>Username</ion-label>
-        <ion-input [(ngModel)]="username" type="text"></ion-input>
-    </ion-item>
     <ion-slides [options]="{pager: true}" (ionWillChange)="onSlideChangeStart($event)">
         <ion-slide *ngFor="let slide of slides">
+            <ion-item>
+                <ion-label floating [innerHTML]="slide.input"></ion-label>
+                <ion-input [(ngModel)]="slide.userInput" type="text"></ion-input>
+            </ion-item>
             <img [src]="slide.image" class="slide-image" alt="slide.title" />
             <h2 class="slide-title" [innerHTML]="slide.title"></h2>
             <p [innerHTML]="slide.description"></p>
