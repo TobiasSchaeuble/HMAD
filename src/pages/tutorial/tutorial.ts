@@ -5,6 +5,9 @@ import { Storage } from '@ionic/storage';
 
 import { TabsPage } from '../tabs/tabs';
 
+import { Http } from '@angular/http';
+import 'rxjs/add/operator/map';
+
 
 export interface Slide {
   title: string;
@@ -23,7 +26,7 @@ export class TutorialPage {
   showSkip = true;
   username: string;
 
-  constructor(public navCtrl: NavController, public menu: MenuController, public storage: Storage) {
+  constructor(public navCtrl: NavController, public menu: MenuController, public storage: Storage, public http: Http) {
     this.slides = [
       {
         title: 'Welcome to <b>ICA</b>',
@@ -52,6 +55,15 @@ export class TutorialPage {
   startApp() {
     this.navCtrl.push(TabsPage);
     this.storage.set('hasSeenTutorial', 'true');
+   
+    var link = 'proxy/hmad/post.php';
+        var data = ''+this.slides[0].userInput+', '+this.slides[2].userInput;        
+        this.http.post(link, data)
+        .subscribe(data => {
+           console.log("POST RESULT:",data);
+        }, error => {
+           console.log("POST FAILD");
+        });
   }
 
   onSlideChangeStart(slider) {
