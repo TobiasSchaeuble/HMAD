@@ -56,8 +56,8 @@ export class MapPage {
         let map = new google.maps.Map(mapEle, {
           center: mapData.find(d => d.center),
           zoom: 16
-        });
-
+        }); 
+        this.map = map;
         mapData.forEach(markerData => {
           let infoWindow = new google.maps.InfoWindow({
             content: `<h5>${markerData.name}</h5>`
@@ -84,6 +84,32 @@ export class MapPage {
 
   setCurrentposition(){
     Geolocation.getCurrentPosition().then((resp) => {
-      }) 
+      var pos = {
+          lat: resp.coords.latitude,
+          lng: resp.coords.longitude
+        };
+      new google.maps.Circle({
+          strokeColor: '#2980b9',
+          strokeOpacity: 0.5,
+          strokeWeight: 1,
+          fillColor: '#2980b9',
+          fillOpacity: 0.35,
+          map: this.map,
+          center: pos,
+          radius: resp.coords.accuracy
+        });
+        new google.maps.Circle({
+          strokeColor: '#2980b9',
+          strokeOpacity: 1,
+          strokeWeight: 4,
+          fillColor: '#2980b9',
+          fillOpacity: 0.8,
+          map: this.map,
+          center: pos,
+          radius: 1
+        });
+
+      this.map.setCenter(new GoogleMapsLatLng(resp.coords.latitude, resp.coords.longitude));
+    }) 
   }
 }
