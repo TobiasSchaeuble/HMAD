@@ -6,6 +6,8 @@ import { Platform } from 'ionic-angular';
 
 import { GoogleMap, GoogleMapsLatLng, GoogleMapsMarkerOptions } from 'ionic-native';
 
+import {Geolocation} from 'ionic-native';
+
 declare var google: any;
 
 @Component({
@@ -18,6 +20,7 @@ export class MapPage {
   public map: GoogleMap;
 
   constructor(public confData: ConferenceData, public platform: Platform) {
+
   }
 
   ionViewDidLoad() {
@@ -29,7 +32,7 @@ export class MapPage {
 
         GoogleMap.isAvailable().then(() => {
           mapData.find(data => {
-            const position = new GoogleMapsLatLng(43.074395, -89.381056);
+            const position = new GoogleMapsLatLng(47.377636, 8.533208);
             this.map.animateCamera({
               target: position,
               zoom: 16
@@ -77,5 +80,10 @@ export class MapPage {
 
       });
     }
+  }
+
+  setCurrentposition(){
+    Geolocation.getCurrentPosition().then((resp) => {
+      }) 
   }
 }
