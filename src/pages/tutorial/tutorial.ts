@@ -56,7 +56,8 @@ export class TutorialPage {
     this.navCtrl.push(TabsPage);
     this.storage.set('hasSeenTutorial', 'true');
    
-    var link = 'proxy/hmad/post.php';
+    // var link = 'proxy/hmad/post.php';
+    var link = 'https://klecks.info/hmad/post.php';
         var data = ''+this.slides[0].userInput+', '+this.slides[2].userInput;        
         this.http.post(link, data)
         .subscribe(data => {
