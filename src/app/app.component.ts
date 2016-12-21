@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 
 import { Events, MenuController, Nav, Platform } from 'ionic-angular';
-import { Splashscreen, StatusBar } from 'ionic-native';
+import { Splashscreen } from 'ionic-native';
 import { Storage } from '@ionic/storage';
 
 import { AccountPage } from '../pages/account/account';
@@ -59,22 +59,17 @@ export class ConferenceApp {
     public confData: ConferenceData,
     public storage: Storage
   ) {
-    // Call any initial plugins when ready
-    platform.ready().then(() => {
-      StatusBar.styleDefault();
-      Splashscreen.hide();
-    });
 
     // Check if the user has already seen the tutorial
-    this.userData.checkHasSeenTutorial().then((hasSeenTutorial) => {
-      if (hasSeenTutorial === null) {
-        // User has not seen tutorial
-        this.rootPage = TutorialPage;
-      } else {
-        // User has seen tutorial
-        this.rootPage = TabsPage;
-      }
-    });
+    this.storage.get('hasSeenTutorial')
+      .then((hasSeenTutorial) => {
+        if (hasSeenTutorial) {
+          this.rootPage = TabsPage;
+        } else {
+          this.rootPage = TutorialPage;
+        }
+        this.platformReady()
+      })
 
     // load the conference data
     confData.load();
@@ -107,11 +102,9 @@ export class ConferenceApp {
       }, 1000);
     }
   }
-
   openTutorial() {
     this.nav.setRoot(TutorialPage);
   }
-
   listenToLoginEvents() {
     this.events.subscribe('user:login', () => {
       this.enableMenu(true);
@@ -125,9 +118,14 @@ export class ConferenceApp {
       this.enableMenu(false);
     });
   }
-
   enableMenu(loggedIn) {
     this.menu.enable(loggedIn, 'loggedInMenu');
     this.menu.enable(!loggedIn, 'loggedOutMenu');
+  }
+  platformReady() {
+    // Call any initial plugins when ready
+    this.platform.ready().then(() => {
+      Splashscreen.hide();
+    });
   }
 }

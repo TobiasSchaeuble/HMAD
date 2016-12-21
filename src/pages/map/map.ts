@@ -4,9 +4,9 @@ import { ConferenceData } from '../../providers/conference-data';
 
 import { Platform } from 'ionic-angular';
 
-import { GoogleMap, GoogleMapsLatLng, GoogleMapsMarkerOptions } from 'ionic-native';
+import { Geolocation } from 'ionic-native';
 
-import {Geolocation} from 'ionic-native';
+import { GoogleMap, GoogleMapsLatLng, GoogleMapsMarkerOptions } from 'ionic-native';
 
 declare var google: any;
 
@@ -16,48 +16,24 @@ declare var google: any;
 })
 export class MapPage {
 
+  map: any;
+
   @ViewChild('mapCanvas') mapElement: ElementRef;
-  public map: GoogleMap;
-
   constructor(public confData: ConferenceData, public platform: Platform) {
-
   }
 
   ionViewDidLoad() {
-    if (this.platform.is('cordova') === true) {
-      let mapEle = this.mapElement.nativeElement;
-      this.confData.getMap().subscribe(mapData => {
-        this.map = new GoogleMap('map_canvas');
-        mapEle.classList.add('show-map');
 
-        GoogleMap.isAvailable().then(() => {
-          mapData.find(data => {
-            const position = new GoogleMapsLatLng(47.377636, 8.533208);
-            this.map.animateCamera({
-              target: position,
-              zoom: 16
-            }).then(() => {
-              mapData.forEach(markerData => {
-                const markerOptions: GoogleMapsMarkerOptions = {
-                  position: markerData,
-                  title: markerData.name
-                };
-
-                this.map.addMarker(markerOptions);
-              });
-            });
-          });
-        });
-      });
-    } else {
       this.confData.getMap().subscribe(mapData => {
         let mapEle = this.mapElement.nativeElement;
 
         let map = new google.maps.Map(mapEle, {
           center: mapData.find(d => d.center),
           zoom: 16
-        }); 
+        });
+
         this.map = map;
+
         mapData.forEach(markerData => {
           let infoWindow = new google.maps.InfoWindow({
             content: `<h5>${markerData.name}</h5>`
@@ -79,7 +55,7 @@ export class MapPage {
         });
 
       });
-    }
+
   }
 
   setCurrentposition(){
@@ -112,4 +88,5 @@ export class MapPage {
       this.map.setCenter(new GoogleMapsLatLng(resp.coords.latitude, resp.coords.longitude));
     }) 
   }
+
 }
