@@ -14,6 +14,8 @@ import { TabsPage } from '../tabs-page/tabs-page';
 export class TutorialPage {
   showSkip = true;
   username: string;
+  password: string;
+  interests: string;
 
 	@ViewChild('slides') slides: Slides;
 
@@ -24,6 +26,9 @@ export class TutorialPage {
   ) { }
 
   startApp() {
+    console.log("username: "+this.username)
+    console.log("password: "+this.password)
+    console.log("interests: "+this.interests)
     this.navCtrl.push(TabsPage).then(() => {
       this.storage.set('hasSeenTutorial', 'true');
     })
