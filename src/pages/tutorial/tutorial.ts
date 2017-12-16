@@ -35,12 +35,20 @@ export class TutorialPage {
 
     var link = 'proxy/hmad/post.php';
     var data = ''+this.username+', '+this.password+', '+this.interests;        
+    // this.http.post(link, data)
+    // .subscribe(data => {
+    //   console.log("POST RESULT:",data);
+    // }, error => {
+    //   console.log("POST FAILD");
+    // });
+
     this.http.post(link, data)
-    .subscribe(data => {
-      console.log("POST RESULT:",data);
-    }, error => {
-      console.log("POST FAILD");
-    });
+            .subscribe(data => {
+                console.log("data: "+ data)
+            }, error => {
+                console.log(JSON.stringify(error.json()));
+            });
+
 
 
     this.navCtrl.push(TabsPage).then(() => {
