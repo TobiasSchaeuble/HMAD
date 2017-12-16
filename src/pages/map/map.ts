@@ -4,9 +4,9 @@ import { ConferenceData } from '../../providers/conference-data';
 
 import { Platform } from 'ionic-angular';
 
-import { GoogleMap, GoogleMapsLatLng, GoogleMapsMarkerOptions } from 'ionic-native';
 
 declare var google: any;
+
 
 @Component({
   selector: 'page-map',
@@ -15,47 +15,20 @@ declare var google: any;
 export class MapPage {
 
   @ViewChild('mapCanvas') mapElement: ElementRef;
-  public map: GoogleMap;
-
   constructor(public confData: ConferenceData, public platform: Platform) {
   }
 
   ionViewDidLoad() {
-    if (this.platform.is('cordova') === true) {
-      let mapEle = this.mapElement.nativeElement;
-      this.confData.getMap().subscribe(mapData => {
-        this.map = new GoogleMap('map_canvas');
-        mapEle.classList.add('show-map');
 
-        GoogleMap.isAvailable().then(() => {
-          mapData.find(data => {
-            const position = new GoogleMapsLatLng(43.074395, -89.381056);
-            this.map.animateCamera({
-              target: position,
-              zoom: 16
-            }).then(() => {
-              mapData.forEach(markerData => {
-                const markerOptions: GoogleMapsMarkerOptions = {
-                  position: markerData,
-                  title: markerData.name
-                };
-
-                this.map.addMarker(markerOptions);
-              });
-            });
-          });
-        });
-      });
-    } else {
-      this.confData.getMap().subscribe(mapData => {
+      this.confData.getMap().subscribe((mapData: any) => {
         let mapEle = this.mapElement.nativeElement;
 
         let map = new google.maps.Map(mapEle, {
-          center: mapData.find(d => d.center),
+          center: mapData.find((d: any) => d.center),
           zoom: 16
         });
 
-        mapData.forEach(markerData => {
+        mapData.forEach((markerData: any) => {
           let infoWindow = new google.maps.InfoWindow({
             content: `<h5>${markerData.name}</h5>`
           });
@@ -76,6 +49,6 @@ export class MapPage {
         });
 
       });
-    }
+
   }
 }
