@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 import { NavController } from 'ionic-angular';
 
-import { TabsPage } from '../tabs/tabs';
 import { UserData } from '../../providers/user-data';
+
+import { UserOptions } from '../../interfaces/user-options';
+
+import { TabsPage } from '../tabs-page/tabs-page';
 
 
 @Component({
@@ -11,12 +15,12 @@ import { UserData } from '../../providers/user-data';
   templateUrl: 'signup.html'
 })
 export class SignupPage {
-  signup: {username?: string, password?: string} = {};
+  signup: UserOptions = { username: '', password: '' };
   submitted = false;
 
   constructor(public navCtrl: NavController, public userData: UserData) {}
 
-  onSignup(form) {
+  onSignup(form: NgForm) {
     this.submitted = true;
 
     if (form.valid) {

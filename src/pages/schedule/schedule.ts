@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { AlertController, App, ItemSliding, List, ModalController, NavController, LoadingController } from 'ionic-angular';
+import { AlertController, App, FabContainer, ItemSliding, List, ModalController, NavController, ToastController, LoadingController, Refresher } from 'ionic-angular';
 
 /*
   To learn how to use third party libs in an
@@ -9,9 +9,10 @@ import { AlertController, App, ItemSliding, List, ModalController, NavController
 // import moment from 'moment';
 
 import { ConferenceData } from '../../providers/conference-data';
-import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
-import { SessionDetailPage } from '../session-detail/session-detail';
 import { UserData } from '../../providers/user-data';
+
+import { SessionDetailPage } from '../session-detail/session-detail';
+import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
 
 
 @Component({
@@ -28,9 +29,9 @@ export class SchedulePage {
   dayIndex = 0;
   queryText = '';
   segment = 'all';
-  excludeTracks = [];
+  excludeTracks: any = [];
   shownSessions: any = [];
-  groups = [];
+  groups: any = [];
   confDate: string;
 
   constructor(
@@ -39,6 +40,7 @@ export class SchedulePage {
     public loadingCtrl: LoadingController,
     public modalCtrl: ModalController,
     public navCtrl: NavController,
+    public toastCtrl: ToastController,
     public confData: ConferenceData,
     public user: UserData,
   ) {}
@@ -52,7 +54,7 @@ export class SchedulePage {
     // Close any open sliding items when the schedule updates
     this.scheduleList && this.scheduleList.closeSlidingItems();
 
-    this.confData.getTimeline(this.dayIndex, this.queryText, this.excludeTracks, this.segment).subscribe(data => {
+    this.confData.getTimeline(this.dayIndex, this.queryText, this.excludeTracks, this.segment).subscribe((data: any) => {
       this.shownSessions = data.shownSessions;
       this.groups = data.groups;
     });
@@ -71,13 +73,14 @@ export class SchedulePage {
 
   }
 
-  goToSessionDetail(sessionData) {
+  goToSessionDetail(sessionData: any) {
     // go to the session detail page
     // and pass in the session data
-    this.navCtrl.push(SessionDetailPage, sessionData);
+
+    this.navCtrl.push(SessionDetailPage, { sessionId: sessionData.id, name: sessionData.name });
   }
 
-  addFavorite(slidingItem: ItemSliding, sessionData) {
+  addFavorite(slidingItem: ItemSliding, sessionData: any) {
 
     if (this.user.hasFavorite(sessionData.name)) {
       // woops, they already favorited it! What shall we do!?
@@ -104,7 +107,7 @@ export class SchedulePage {
 
   }
 
-  removeFavorite(slidingItem: ItemSliding, sessionData, title) {
+  removeFavorite(slidingItem: ItemSliding, sessionData: any, title: string) {
     let alert = this.alertCtrl.create({
       title: title,
       message: 'Would you like to remove this session from your favorites?',
@@ -134,7 +137,7 @@ export class SchedulePage {
     alert.present();
   }
 
-  openSocial(network, fab) {
+  openSocial(network: string, fab: FabContainer) {
     let loading = this.loadingCtrl.create({
       content: `Posting to ${network}`,
       duration: (Math.random() * 1000) + 500
@@ -143,5 +146,24 @@ export class SchedulePage {
       fab.close();
     });
     loading.present();
+  }
+
+  doRefresh(refresher: Refresher) {
+    this.confData.getTimeline(this.dayIndex, this.queryText, this.excludeTracks, this.segment).subscribe((data: any) => {
+      this.shownSessions = data.shownSessions;
+      this.groups = data.groups;
+
+      // simulate a network request that would take longer
+      // than just pulling from out local json file
+      setTimeout(() => {
+        refresher.complete();
+
+        const toast = this.toastCtrl.create({
+          message: 'Sessions have been updated.',
+          duration: 3000
+        });
+        toast.present();
+      }, 1000);
+    });
   }
 }

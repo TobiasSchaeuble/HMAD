@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 
 import { AlertController, NavController } from 'ionic-angular';
 
-import { LoginPage } from '../login/login';
-import { SupportPage } from '../support/support';
 import { UserData } from '../../providers/user-data';
 
 
@@ -43,7 +41,7 @@ export class AccountPage {
     });
     alert.addButton({
       text: 'Ok',
-      handler: data => {
+      handler: (data: any) => {
         this.userData.setUsername(data.username);
         this.getUsername();
       }
@@ -64,10 +62,10 @@ export class AccountPage {
 
   logout() {
     this.userData.logout();
-    this.nav.setRoot(LoginPage);
+    this.nav.setRoot('LoginPage');
   }
 
   support() {
-    this.nav.push(SupportPage);
+    this.nav.push('SupportPage');
   }
 }
