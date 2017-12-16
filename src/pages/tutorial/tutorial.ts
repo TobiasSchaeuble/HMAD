@@ -33,7 +33,7 @@ export class TutorialPage {
     console.log("password: "+this.password)
     console.log("interests: "+this.interests)
 
-    var link = 'proxy/hmad/post.php';
+    var link = 'https://klecks.info/hmad/post.php';
     var data = ''+this.username+', '+this.password+', '+this.interests;        
     // this.http.post(link, data)
     // .subscribe(data => {

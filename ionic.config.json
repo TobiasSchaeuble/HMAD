@@ -4,11 +4,5 @@
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  },
-  "proxies": [
-		{
-		"path": "/proxy",
-		"proxyUrl": "https://klecks.info"
-		}
-	]
+  }
 }
