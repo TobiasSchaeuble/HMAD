@@ -7,9 +7,8 @@ import { MapPage } from '../map/map';
 import { SchedulePage } from '../schedule/schedule';
 import { SpeakerListPage } from '../speaker-list/speaker-list';
 
-
 @Component({
-  templateUrl: 'tabs.html'
+  templateUrl: 'tabs-page.html'
 })
 export class TabsPage {
   // set the root pages for each tab
